@@ -1,0 +1,157 @@
+---
+description: Read this file whenever you create new file or folder or need information about the project folder.
+globs: 
+alwaysApply: false
+---
+# Agent Framework Setup Instructions
+
+Welcome to the Agent Framework! Here’s a guide to help you understand the project structure and where to place new files as you create or modify agents, memory, tools, prompts, and more.
+
+## Project Structure
+├── agents/                  # Contains all agent-related code
+│   ├── __init__.py
+│   ├── base_agent.py        # The base agent class that all other agents inherit from
+│   ├── ide_agent.py         # Example of an agent (e.g., an IDE agent)
+│   ├── other_agents.py      # Placeholder for additional agent types
+│   └── memory/              # Memory folder added
+│       ├── __init__.py
+│       └── agent_memory.py  # Example memory file
+├── tasks/                   # Where tasks or agent workflows are defined
+│   ├── __init__.py
+│   ├── sample_task.py       # Example task that calls the agents and demonstrates functionality
+│   └── agents_test/         # Test folder for agent tests
+│       └── search_agent_test.py # Test file for the SearchAgent
+├── utils/                   # Utility functions that are shared across the agents
+│   ├── __init__.py
+│   └── tools.py             # Contains the LLM client factory and other helper functions
+├── prompts/                 # Store the prompt files and instructions for each agent here
+│   └── ide_agent_instructions.md  # Example prompt file for the IDE agent
+├── config/                  # Configuration files, environment variables, etc.
+│   └── settings.py          # Holds all global configuration, including LLM selection
+├── main.py                  # The entry point for the system that initiates agent tasks
+├── requirements.txt         # List of project dependencies
+└── README.md                # This file (instructions for using the framework)
+
+
+
+
+---
+
+## How to Add New Files or Components
+
+### 1. **Agents**
+Agents are the core components that will interact with the models. You should define each agent in the `agents/` folder.
+
+- **Location**: `agents/`
+- **File Naming**: `agent_name.py` (e.g., `ide_agent.py` for an IDE-focused agent)
+- **Inherits from**: `BaseAgent` (defined in `base_agent.py`)
+- **Example**: If creating an `IDEAgent`, place the logic for this agent in `agents/ide_agent.py`.
+
+**Structure for New Agent**:
+```python
+# agents/new_agent.py
+from agents.base_agent import BaseAgent
+
+class NewAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(name="NewAgent")
+
+    def perform_task(self):
+        return "Task performed by NewAgent"
+
+
+
+
+2. Memory
+If your agent requires memory (to store or recall information), you should define that here. Use external libraries or custom mechanisms.
+
+Location: agents/memory/ 
+
+File Naming: memory_name.py (e.g., agent_memory.py)
+
+Integrations: You can integrate memory solutions like instructor or langchain here.
+
+3. Tools
+Tools provide functionality that agents can use to perform tasks (like data processing, external APIs, etc.).
+
+Location: utils/
+
+File Naming: tool_name.py (e.g., tools.py for generic tools)
+
+Use: Tools should be imported and used by agents. For example, a tool might handle calling an LLM API, or performing some text processing.
+
+Example Tool:
+
+# utils/tools.py
+def process_data(data):
+    # Tool function to process data
+    return data.upper()
+
+
+4. Prompts
+Prompts are predefined instructions for the models that the agents will use. Store them here.
+
+Location: prompts/
+
+File Naming: agent_name_instructions.md (e.g., ide_agent_instructions.md)
+
+Use: Place prompt templates here that agents will use to structure requests to models.
+
+Example Prompt:
+
+# IDE Agent Instructions
+
+The IDE Agent should summarize code snippets with clarity and detail. Here’s the general structure:
+
+## Input:
+- The agent receives raw code from the user.
+
+## Output:
+- The agent summarizes the function of the code, including variables, logic, and any external libraries used.
+
+Example: `def add(a, b): return a + b`
+
+
+5. Tasks
+Tasks define how agents interact. This is where workflows or processes are defined. Each task can involve multiple agents and tools.
+
+Location: tasks/
+
+File Naming: task_name.py (e.g., sample_task.py)
+
+Purpose: Tasks should orchestrate agent workflows and manage task execution. You may want to create an example task or a demo in this folder to test different agent interactions.
+
+Example Task:
+
+
+tasks/sample_task.py
+from agents.ide_agent import IDEAgent
+
+def run_ide_task():
+    agent = IDEAgent()
+    code = "def multiply(a, b): return a * b"
+    summary = agent.summarize_code(code)
+    print("Code Summary:", summary)
+
+
+
+Notes
+Adding New Agents: When creating new agents, be sure to inherit from BaseAgent to ensure consistent behavior.
+
+Environment Variables: For model selection and API keys, ensure that your .env is properly set up.
+
+Testing: Always test new agents and tools in the tasks/ folder with sample workflows.
+
+---
+
+This markdown gives a comprehensive and clear guide for creating new components, keeping the project organized, and ensuring the agent knows where to place their files for agents, tasks, tools, prompts, and memory.
+
+
+
+
+
+
+
+
+
+

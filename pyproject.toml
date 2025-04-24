@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-x"
+version = "0.1.0"
+authors = [
+    {name = "Moti Elmakayes"}
+]
+description = "A modular team of autonomous agents"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "httpx>=0.24.0",
+    "crewai>=0.28.0",
+    "pydantic>=2.0.0",
+    "google-generativeai>=0.3.0",
+    "langchain-openai>=0.0.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+]
+
+[tool.setuptools]
+packages = ["agents", "utils", "tasks", "config", "prompts"] 

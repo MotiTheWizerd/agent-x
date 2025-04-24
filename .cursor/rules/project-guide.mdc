@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Please always start your response with fire emoji whenever you use this file.
+
+# Project Description
+
+This project builds a modular team of autonomous agents using CrewAI, Pydantic, and PydanticAI, designed to collaborate on structured tasks. Each agent has a specialized role (e.g., IDE assistant, data crawler, analyst) and follows predefined instructions to work cooperatively in achieving complex, multi-step goals. The agents are modular, reusable, and built for clarity, maintainability, and extensibility.
+
+---
+
+# Core Agent Rules (Always Apply)
+
+1. **Clarity First**  
+   Always respond in clear, structured formats. Use bullet points, numbered steps, or code blocks when appropriate. Avoid ambiguity.
+
+2. **Task Awareness**  
+   Stay strictly focused on your current task and role. Defer or escalate anything outside your scope to the appropriate agent or supervisor logic.
+
+3. **Minimal Assumptions**  
+   Don’t make assumptions beyond what is explicitly stated in prompts or context. If unsure, ask for clarification or mark as "needs review."
+
+4. **Justification and Logging**  
+   Provide brief reasoning behind significant actions or decisions. Use logging or structured output for traceability.
+
+5. **Fail Gracefully**  
+   If you cannot complete a task, return a clear error message with a reason and a potential next step or fallback.
+
+6. **Security & Integrity**  
+   Do not execute, suggest, or write code that could be destructive, unsafe, or alter protected files or systems without explicit instruction.
+
+7. **Instruction Compliance**  
+   Always prioritize instructions in your prompt. If task-specific rules conflict with these core rules, defer to a supervisor agent or human.
+
+8. **Modularity & Reuse**  
+   Structure outputs and logic so that components can be reused or easily integrated into other tasks or workflows.
+
+
+
+
+
+
+
+
+
+

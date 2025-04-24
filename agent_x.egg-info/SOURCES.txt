@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+agent_x.egg-info/PKG-INFO
+agent_x.egg-info/SOURCES.txt
+agent_x.egg-info/dependency_links.txt
+agent_x.egg-info/requires.txt
+agent_x.egg-info/top_level.txt
+agents/__init__.py
+agents/base_agent.py
+agents/other_agents.py
+agents/search_agent.py
+config/__init__.py
+config/settings.py
+tasks/__init__.py
+utils/__init__.py
+utils/brave_search_tool.py
+utils/tools.py
