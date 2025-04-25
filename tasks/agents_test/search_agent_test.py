@@ -5,6 +5,8 @@ import json
 from dotenv import load_dotenv
 from agents.search_agent import SearchAgent
 
+print("Script started...")
+
 def run_search_task(query=None, verbose=True):
     """
     Run a test of the SearchAgent with the specified query.

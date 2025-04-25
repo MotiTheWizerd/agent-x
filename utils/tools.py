@@ -6,12 +6,17 @@ load_dotenv()
 
 def get_llm_client(provider: str = "gemini"):
     if provider == "openai":
-        from langchain_openai import ChatOpenAI  # Only import if needed
         api_key = os.getenv("OPENAI_API_KEY")
         model = os.getenv("OPENAI_LLM", "gpt-4")
         if not api_key:
             raise ValueError("Missing OPENAI_API_KEY in environment variables.")
-        return ChatOpenAI(model_name=model, openai_api_key=api_key)
+        # Use CrewAI's LLM for OpenAI
+        llm = LLM(
+            model=model,
+            temperature=0.7,
+            api_key=api_key
+        )
+        return llm
 
     elif provider == "gemini":
         api_key = os.getenv("GEMINI_API_KEY")
