@@ -9,8 +9,12 @@ class SearchAgent(BaseAgent):
     SearchAgent is responsible for performing internet searches and retrieving relevant information.
     It uses the Brave Search API for web searches.
     """
-    def __init__(self, name: str = "Search Specialist", llm_provider: str = None, verbose: bool = True):
-        super().__init__(name=name, llm_provider=llm_provider)
+    def __init__(self, name: str = "Search Specialist", verbose: bool = True):
+        # Define required properties for BaseAgent
+        role = "Web search Specialist"
+        goal = "Find accurate and relevant information from the web based on queries"
+        backstory = "As a search specialist, I have been trained to efficiently find information on the internet, analyzing search results to provide the most relevant data. I specialize in contextual understanding of search queries and retrieving high-quality information."
+        super().__init__(name=name, role=role, goal=goal, backstory=backstory)
         
         # Validate API key
         if not os.getenv("BRAVE_API_KEY"):
@@ -19,12 +23,6 @@ class SearchAgent(BaseAgent):
         # Initialize search tool
         self.search_tool = BraveSearchTool()
         
-        # Agent properties
-        self.role = "Search Specialist"
-        self.goal = "Find accurate and relevant information from the web based on queries"
-        self.backstory = "As a search specialist, I have been trained to efficiently find information on the internet, analyzing search results to provide the most relevant data. I specialize in contextual understanding of search queries and retrieving high-quality information."
-        self.tags = ["research", "web search", "information retrieval", "knowledge access"]
-        self.tools = ["brave_search"]
         self.verbose = verbose
 
     def perform_task(self, query: str) -> List[Dict[str, str]]:
@@ -57,22 +55,21 @@ class SearchAgent(BaseAgent):
                 if len(search_results) > 0 and "error" in search_results[0]:
                     print(f"❌ Error: {search_results[0]['error']}")
             
-            # If LLM is available, enhance the results with analysis
-            if self.llm_client:  # Disabled for now as we focus on search functionality
-                try:
-                    prompt = f"""
-                    Analyze the following search results for the query: '{query}'
-                    
-                    {search_results[:3]}
-                    
-                    Provide a brief summary of the key information found:
-                    """
-                    analysis = self.interact_with_llm(prompt)
-                    if self.verbose:
-                        print(f"\n📊 Analysis: {analysis}\n")
-                except Exception as e:
-                    if self.verbose:
-                        print(f"⚠️ LLM analysis skipped: {str(e)}")
+            # LLM analysis enabled to enhance search results with summary
+            try:
+                prompt = f"""
+                Analyze the following search results for the query: '{query}'
+                
+                {search_results[:3]}
+                
+                Provide a brief summary of the key information found:
+                """
+                analysis = self.interact_with_llm(prompt)
+                if self.verbose:
+                    print(f"\n📊 Analysis: {analysis}\n")
+            except Exception as e:
+                if self.verbose:
+                    print(f"⚠️ LLM analysis skipped: {str(e)}")
             
             return search_results
         except Exception as e:
@@ -93,7 +90,5 @@ class SearchAgent(BaseAgent):
             "role": self.role,
             "goal": self.goal,
             "backstory": self.backstory,
-            "tools": self.tools,
-            "tags": self.tags,
             "verbose": self.verbose
         }

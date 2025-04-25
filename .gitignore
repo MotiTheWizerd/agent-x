@@ -7,3 +7,4 @@ build/
 develop-eggs/
 dist/
 agent-env/
+agent_x.egg-info/

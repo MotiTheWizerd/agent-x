@@ -15,10 +15,42 @@ in this mode you will not commit any changes to the code itself, You will learn 
 and will provide full details on your finding.
 
 
+/ask
+*** you will start your response with "❓ Ask Mode"
+In this mode you will only answer simple question, like a chat, no need to go too deep but still provide complete details
+in this mode you will not commit any changes to the code itself.
 
 
-
+/info
+*** you will start your response with "ℹ️ Info Mode"
+In this mode the user only want to report the AI agent about the outcome.
+in this mode you will not commit any changes to the code itself.
 
 
 
 if there is no mode provided, your response will start with  "🔵 Default Mode"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+  

@@ -1,5 +1,4 @@
 # agents/base_agent.py
-from utils.tools import get_llm_client
 from dotenv import load_dotenv
 import os
 from typing import List, Optional
@@ -10,12 +9,13 @@ load_dotenv()
 
 class BaseAgent:
     """Base class for all agents in the system, providing common properties and methods."""
-    def __init__(self, role: str, goal: str, backstory: str, tools: Optional[List] = None, allow_delegation: bool = False):
+    def __init__(self, role: str, goal: str, backstory: str, tools: Optional[List] = None, allow_delegation: bool = False, name: str = 'Base Agent'):
         self.role = role
         self.goal = goal
         self.backstory = backstory
         self.tools = tools or []
         self.allow_delegation = allow_delegation
+        self.name = name
         # Grouped LLM configuration as a single field with default values
         self.llm_config = LLMConfig()
 
@@ -37,7 +37,8 @@ class BaseAgent:
         if not api_key:
             raise ValueError(f"Missing {api_key_name} in environment variables.")
         config_dict.setdefault('api_key', api_key)
-        print(f"Using model: {model_string}")
+        # Commented out to reduce console clutter
+        # print(f"Using model: {model_string}")
         return LLM(**config_dict)
 
     def get_agent(self) -> Agent:
@@ -66,34 +67,16 @@ class BaseAgent:
     def interact_with_llm(self, prompt: str):
         """
         Send prompt to the LLM and get the response.
-        Handles both direct Gemini models and CrewAI LLM instances.
+        Uses the configured CrewAI LLM instance from get_llm().
         """
-        if not self.llm_client:
-            raise ValueError(f"LLM client not initialized. Check if {self.llm_provider.upper()}_API_KEY is set.")
-            
-        # Handle different LLM client types
+        # Use the LLM instance from get_llm() for interaction
+        llm_instance = self.get_llm()
+        
+        # Handle interaction with the CrewAI LLM instance
         try:
-            # Check if this is a CrewAI LLM instance with call method
-            if hasattr(self.llm_client, 'call') and callable(getattr(self.llm_client, 'call')):
-                print('calling Crew ai call')
-                # CrewAI LLM uses call() method with a messages parameter
-                messages = [{"role": "user", "content": prompt}]
-                response = self.llm_client.call(messages=messages)
-                return response
-            
-            # Google's GenerativeModel
-            elif hasattr(self.llm_client, 'generate_content') and callable(getattr(self.llm_client, 'generate_content')):
-                response = self.llm_client.generate_content(prompt)
-                return response.text
-            
-            # OpenAI and other chat-based APIs
-            elif hasattr(self.llm_client, 'chat'):
-                response = self.llm_client.chat([{"role": "user", "content": prompt}])
-                return response['choices'][0]['message']['content']
-            
-            # If none of the above patterns match, raise an error
-            else:
-                raise ValueError(f"Unsupported LLM client type: {type(self.llm_client).__name__}. Available methods: {dir(self.llm_client)}")
-                
+            print('Calling CrewAI LLM')
+            messages = [{"role": "user", "content": prompt}]
+            response = llm_instance.call(messages=messages)
+            return response
         except Exception as e:
             raise ValueError(f"Error communicating with LLM: {str(e)}")
