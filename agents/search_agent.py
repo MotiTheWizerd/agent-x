@@ -58,7 +58,7 @@ class SearchAgent(BaseAgent):
                     print(f"❌ Error: {search_results[0]['error']}")
             
             # If LLM is available, enhance the results with analysis
-            if self.llm_client and False:  # Disabled for now as we focus on search functionality
+            if self.llm_client:  # Disabled for now as we focus on search functionality
                 try:
                     prompt = f"""
                     Analyze the following search results for the query: '{query}'

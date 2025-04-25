@@ -36,10 +36,12 @@ class BaseAgent:
             
         # Handle different LLM client types
         try:
-            # Check if this is a CrewAI LLM instance
-            if hasattr(self.llm_client, 'generate') and callable(getattr(self.llm_client, 'generate')):
-                # CrewAI LLM interface
-                response = self.llm_client.generate(prompt)
+            # Check if this is a CrewAI LLM instance with call method
+            if hasattr(self.llm_client, 'call') and callable(getattr(self.llm_client, 'call')):
+                print('calling Crew ai call')
+                # CrewAI LLM uses call() method with a messages parameter
+                messages = [{"role": "user", "content": prompt}]
+                response = self.llm_client.call(messages=messages)
                 return response
             
             # Google's GenerativeModel
@@ -52,10 +54,9 @@ class BaseAgent:
                 response = self.llm_client.chat([{"role": "user", "content": prompt}])
                 return response['choices'][0]['message']['content']
             
-            # Fallback generic approach
+            # If none of the above patterns match, raise an error
             else:
-                response = self.llm_client(prompt)
-                return response
+                raise ValueError(f"Unsupported LLM client type: {type(self.llm_client).__name__}. Available methods: {dir(self.llm_client)}")
                 
         except Exception as e:
             raise ValueError(f"Error communicating with LLM: {str(e)}")

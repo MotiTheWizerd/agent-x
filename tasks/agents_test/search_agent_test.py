@@ -40,7 +40,7 @@ def run_search_task(query=None, verbose=True):
             print(f"Tags: {', '.join(agent_info['tags'])}")
 
         # Use provided query or default test query
-        search_query = query or "חפש לי מסעדות יוקרה בתל אביב"
+        search_query = query or "can you please find me some good and cheap places to buy food for home (not restaurant) in israel, i live Ha Shive street in tel aviv?"
         
         if not verbose:
             print(f"\nPerforming search for: '{search_query}'")
