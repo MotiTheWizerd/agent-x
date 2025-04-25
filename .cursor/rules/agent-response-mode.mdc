@@ -1,0 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+the following "Modes" will shape they you response and act with your response.
+
+
+if the response start with one the following prefix (ignore casesenstive), please follow mode instructions:
+
+
+/review: 
+*** you will start your response with "🔍 Review Mode"
+in this mode you will not commit any changes to the code itself, You will learn the code througly based on the user question
+and will provide full details on your finding.
+
+
+
+
+
+
+
+
+if there is no mode provided, your response will start with  "🔵 Default Mode"

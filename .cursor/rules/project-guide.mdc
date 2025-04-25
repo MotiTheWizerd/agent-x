@@ -3,8 +3,6 @@ description:
 globs: 
 alwaysApply: true
 ---
-- Please always start your response with fire emoji whenever you use this file.
-
 # Project Description
 
 This project builds a modular team of autonomous agents using CrewAI, Pydantic, and PydanticAI, designed to collaborate on structured tasks. Each agent has a specialized role (e.g., IDE assistant, data crawler, analyst) and follows predefined instructions to work cooperatively in achieving complex, multi-step goals. The agents are modular, reusable, and built for clarity, maintainability, and extensibility.

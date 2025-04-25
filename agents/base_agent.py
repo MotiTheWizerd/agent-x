@@ -2,28 +2,65 @@
 from utils.tools import get_llm_client
 from dotenv import load_dotenv
 import os
+from typing import List, Optional
+from crewai import Agent, LLM
+from .llm_config import LLMConfig
 
 load_dotenv()
 
 class BaseAgent:
-    def __init__(self, name: str, llm_provider: str = None):
-        self.name = name
-        self.llm_provider = llm_provider or os.getenv("DEFAULT_LLM_PROVIDER", "gemini")
-        try:
-            self.llm_client = get_llm_client(self.llm_provider)
-        except ValueError as e:
-            # Log the error but don't fail initialization if the agent doesn't need LLM
-            print(f"Warning: LLM client initialization failed: {str(e)}")
-            print(f"The agent will initialize, but LLM-dependent features won't work.")
-            self.llm_client = None
-        except Exception as e:
-            # Catch other exceptions for better error reporting
-            print(f"Warning: LLM client initialization error: {str(e)}")
-            print(f"The agent will initialize, but LLM-dependent features won't work.")
-            self.llm_client = None
+    """Base class for all agents in the system, providing common properties and methods."""
+    def __init__(self, role: str, goal: str, backstory: str, tools: Optional[List] = None, allow_delegation: bool = False):
+        self.role = role
+        self.goal = goal
+        self.backstory = backstory
+        self.tools = tools or []
+        self.allow_delegation = allow_delegation
+        # Grouped LLM configuration as a single field with default values
+        self.llm_config = LLMConfig()
+
+    def get_llm(self) -> LLM:
+        """Create and return a configured CrewAI LLM instance based on the agent's config."""
+        config_dict = self.llm_config.to_dict()
+        # Ensure API key is set based on provider in model string
+        model_string = config_dict.get('model', os.getenv("LLM_PROVIDER_MODEL", "gemini/gemini-1.5-pro"))
+        provider = model_string.split('/')[0]
+        api_key_map = {
+            "openai": "OPENAI_API_KEY",
+            "gemini": "GEMINI_API_KEY"
+            # Add more providers here as needed
+        }
+        if provider not in api_key_map:
+            raise ValueError(f"Unsupported LLM provider in model string: {provider}")
+        api_key_name = api_key_map[provider]
+        api_key = os.getenv(api_key_name)
+        if not api_key:
+            raise ValueError(f"Missing {api_key_name} in environment variables.")
+        config_dict.setdefault('api_key', api_key)
+        print(f"Using model: {model_string}")
+        return LLM(**config_dict)
+
+    def get_agent(self) -> Agent:
+        """Create and return a CrewAI Agent instance with the configured settings."""
+        return Agent(
+            role=self.role,
+            goal=self.goal,
+            backstory=self.backstory,
+            tools=self.tools,
+            allow_delegation=self.allow_delegation,
+            llm=self.get_llm(),
+        )
+
+    def customize_llm(self, **kwargs):
+        """Customize LLM parameters by updating the config object."""
+        for key, value in kwargs.items():
+            if hasattr(self.llm_config, key):
+                setattr(self.llm_config, key, value)
+            else:
+                raise ValueError(f"Invalid LLM parameter: {key}")
 
     def perform_task(self, task_input: str):
-        # Example: You can implement this in subclasses of BaseAgent
+        """Example method to be implemented in subclasses."""
         raise NotImplementedError("Each agent must implement the `perform_task` method.")
 
     def interact_with_llm(self, prompt: str):
