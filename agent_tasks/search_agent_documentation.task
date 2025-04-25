@@ -1,0 +1,5 @@
+[✅] Locate and review the search_agent code to understand its purpose, methods, and usage.
+[✅] Use the same documentation format/style as base_agent_documentation.md.
+[✅] Draft clear, structured documentation for search_agent, including: overview/purpose, key methods and attributes, usage examples, and extension/customization notes.
+[✅] Save the documentation in the documentations folder.
+[✅] Review and finalize the documentation. 

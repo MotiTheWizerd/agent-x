@@ -3,10 +3,17 @@ description:
 globs: 
 alwaysApply: true
 ---
-the following "Modes" will shape they you response and act with your response.
+
+*****************************************************************************
+ NEVER START A TASK IF ITS NOT START WITH "/"
+ for example if the user say "review my code" DO NOT START THE /review TASK!
+*****************************************************************************
+
+the following Mode list will shape the way you response and act within  as an agent. 
+if the response start with one the following prefix (ignore casesenstive ), please follow mode instructions:
 
 
-if the response start with one the following prefix (ignore casesenstive), please follow mode instructions:
+
 
 
 /review: 
@@ -25,6 +32,23 @@ in this mode you will not commit any changes to the code itself.
 *** you will start your response with "ℹ️ Info Mode"
 In this mode the user only want to report the AI agent about the outcome.
 in this mode you will not commit any changes to the code itself.
+
+
+
+/start mission
+*** you will start your response with "📋 Mission Mode - Working currently on <current mini mission name>"
+In this mode your job is to get and complete a specific mission.
+You will stay in the mode until the user will end the mission: "/end mission"
+Rules:
+
+Once you get a mission you'll do the following:
+1. review it and split it to smaller mission.
+2. save the tasks list in "agent_tasks/<MEANINGFUL_NAME>.task" as a list:
+ [❌] <mini mission 1> // you'll replace "mini task x" with appropriate name for the mini task.
+ [❌] <mini mission 2>
+ etc..
+3. when you start working on a mini mission you'll change the ❌ icon to active mode icon: 🟢
+4. when you complete a mini mission you'll change the mission current icon to: ✅
 
 
 
@@ -53,4 +77,30 @@ if there is no mode provided, your response will start with  "🔵 Default Mode"
 
 
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

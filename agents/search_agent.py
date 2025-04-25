@@ -1,5 +1,6 @@
 # agents/search_agent.py
 import os
+import logfire  # Add logfire import
 from typing import Dict, List, Any
 from agents.base_agent import BaseAgent
 from utils.brave_search_tool import BraveSearchTool
@@ -35,6 +36,7 @@ class SearchAgent(BaseAgent):
         Returns:
             A list of search results, each containing title, url, and description
         """
+        logfire.info("Search started", agent=self.name, query=query)
         if self.verbose:
             print("\n" + "="*50)
             print(f"🔍 Agent: {self.name} ({self.role})")
@@ -49,6 +51,7 @@ class SearchAgent(BaseAgent):
                 print(f"🔎 Executing search query: '{query}'")
                 
             search_results = self.search_tool.search(query)
+            logfire.info("Search completed", agent=self.name, query=query, result_count=len(search_results))
             
             if self.verbose:
                 print(f"✅ Found {len(search_results)} results")
@@ -68,12 +71,14 @@ class SearchAgent(BaseAgent):
                 if self.verbose:
                     print(f"\n📊 Analysis: {analysis}\n")
             except Exception as e:
+                logfire.error("LLM analysis failed", agent=self.name, query=query, error=str(e))
                 if self.verbose:
                     print(f"⚠️ LLM analysis skipped: {str(e)}")
             
             return search_results
         except Exception as e:
             error_msg = f"Search failed: {str(e)}"
+            logfire.error("Search failed", agent=self.name, query=query, error=str(e))
             if self.verbose:
                 print(f"❌ {error_msg}")
             return [{"error": error_msg}]
